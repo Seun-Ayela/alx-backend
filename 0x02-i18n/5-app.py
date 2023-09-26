@@ -3,7 +3,8 @@
 """
 
 
-from flask import Flask, render_template, request, g
+from flask import Flask, render_template, g
+import requests
 from flask_babel import Babel
 
 
@@ -36,7 +37,7 @@ users = {
 def get_user():
     """returns a user dictionary or None if the ID cannot be found
     """
-    login_id = request.args.get('login_as')
+    login_id = requests.args.get('login_as')
     if login_id:
         return users.get(int(login_id))
     return None
@@ -57,12 +58,12 @@ def get_locale():
     Returns:
                     _type_: _description_
     """
-    locale = request.args.get('locale')
+    locale = requests.args.get('locale')
     if locale in app.config['LANGUAGES']:
         print(locale)
         return locale
 
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
+    return requests.accept_languages.best_match(app.config['LANGUAGES'])
 
 # babel.init_app(app, locale_selector=get_locale)
 

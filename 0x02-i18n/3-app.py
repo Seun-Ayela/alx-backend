@@ -3,7 +3,8 @@
 """
 
 
-from flask import Flask, request, render_template
+from flask import Flask, render_template
+import requests
 from flask_babel import Babel
 
 
@@ -32,7 +33,7 @@ def get_locale():
     Returns:
             _type_: _description_
     """
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
+    return requests.accept_languages.best_match(app.config['LANGUAGES'])
 
 
 @app.route('/')

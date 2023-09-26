@@ -4,7 +4,8 @@
 import pytz
 from flask_babel import Babel
 from typing import Union, Dict
-from flask import Flask, render_template, request, g
+from flask import Flask, render_template, g
+import requests
 
 
 class Config:
@@ -30,7 +31,7 @@ users = {
 def get_user() -> Union[Dict, None]:
     """Retrieves a user based on a user id.
     """
-    login_id = request.args.get('login_as', '')
+    login_id = requests.args.get('login_as', '')
     if login_id:
         return users.get(int(login_id), None)
     return None
@@ -48,12 +49,12 @@ def before_request() -> None:
 def get_locale() -> str:
     """Retrieves the locale for a web page.
     """
-    locale = request.args.get('locale', '')
+    locale = requests.args.get('locale', '')
     if locale in app.config["LANGUAGES"]:
         return locale
     if g.user and g.user['locale'] in app.config["LANGUAGES"]:
         return g.user['locale']
-    header_locale = request.headers.get('locale', '')
+    header_locale = requests.headers.get('locale', '')
     if header_locale in app.config["LANGUAGES"]:
         return header_locale
     return app.config['BABEL_DEFAULT_LOCALE']
@@ -63,7 +64,7 @@ def get_locale() -> str:
 def get_timezone() -> str:
     """Retrieves the timezone for a web page.
     """
-    timezone = request.args.get('timezone', '').strip()
+    timezone = requests.args.get('timezone', '').strip()
     if not timezone and g.user:
         timezone = g.user['timezone']
     try:
